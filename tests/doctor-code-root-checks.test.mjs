@@ -9,6 +9,16 @@
 // node_modules/ created inside the data root flips "Dependencies not
 // installed" to "installed" even though the real code checkout's own
 // node_modules never moved. The inverse held for the tracked-.bak check, and
+// checkTrackedBakFiles() must read the CODE checkout, not the resolved data
+// root (career-ops#3867 finding 6).
+//
+// node_modules and .git belong to wherever doctor.mjs itself lives. Under a
+// split checkout (CAREER_OPS_ROOT/CAREER_OPS_DATA_DIR, or the .career-ops-data
+// marker) getCareerOpsRoot() resolves to a separate data-only directory that
+// never holds either — jday013/maxmilian's proof on #3867: an empty
+// node_modules/ created inside the data root flips "Dependencies not
+// installed" to "installed" even though the real code checkout's own
+// node_modules never moved. The inverse held for the tracked-.bak check, and
 // in two places: the human-readable checks array in main() AND the separate
 // onboardingState() used by `--json` (the form AGENTS.md has every agent run
 // on the first message of every session) each ran their own
@@ -19,9 +29,9 @@
 // already pins that it keeps checking the targeted directory. Here the split
 // is the ambient one a real installation hits — CAREER_OPS_ROOT set, no
 // --target — so codeRoot must fall back to doctor.mjs's own directory.
-import { pass, fail, NODE, ROOT } from './helpers.mjs';
+import { pass, fail, NODE, ROOT, rmSync } from './helpers.mjs';
 import { execFileSync } from 'child_process';
-import { mkdtempSync, writeFileSync, rmSync } from 'fs';
+import { mkdtempSync, writeFileSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 
