@@ -15,6 +15,22 @@ import { join } from 'path';
 console.log('\ndoctor.mjs — tracked .bak files');
 
 const DOCTOR = join(ROOT, 'doctor.mjs');
+//
+// update-system.mjs versions before #2857 could commit cascading .bak backups
+// when a checkout write failed. #2857 stops that for NEW installs, but an
+// install that already `git add`ed one is stuck: nothing in the update path
+// untracks a path git already has, so the update looks like it silently did
+// nothing (career-ops#2881) with no signal pointing at .bak. This pins the
+// doctor check that surfaces it instead of letting it stay silent.
+import { pass, fail, NODE, ROOT, rmSync } from './helpers.mjs';
+import { execFileSync } from 'child_process';
+import { mkdtempSync, writeFileSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
+
+console.log('\ndoctor.mjs — tracked .bak files');
+
+const DOCTOR = join(ROOT, 'doctor.mjs');
 
 function runDoctor(cwd) {
   try {
