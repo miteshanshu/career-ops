@@ -14,6 +14,11 @@
 //
 // node_modules and .git belong to wherever doctor.mjs itself lives. Under a
 // split checkout (CAREER_OPS_ROOT/CAREER_OPS_DATA_DIR, or the .career-ops-data
+// checkTrackedBakFiles() must read the CODE checkout, not the resolved data
+// root (career-ops#3867 finding 6).
+//
+// node_modules and .git belong to wherever doctor.mjs itself lives. Under a
+// split checkout (CAREER_OPS_ROOT/CAREER_OPS_DATA_DIR, or the .career-ops-data
 // marker) getCareerOpsRoot() resolves to a separate data-only directory that
 // never holds either — jday013/maxmilian's proof on #3867: an empty
 // node_modules/ created inside the data root flips "Dependencies not
